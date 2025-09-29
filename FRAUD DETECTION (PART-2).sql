@@ -60,6 +60,44 @@ FROM DETECT
 WHERE is_fraud = 1
 GROUP BY hours
 ORDER BY hours;
+---Q-8-Find transactions where account_age_days < 7 and is_fraud = 1. Show customer_id, transaction_datetime, amount, account_age_days.---
+SELECT * FROM DETECT;
+SELECT 
+customer_id, 
+transaction_datetime, 
+amount, 
+account_age_days
+FROM DETECT
+WHERE account_age_days < 7 
+  AND is_fraud = 1;
+---Q-9-For each customer_id, compute total_amount, avg_amount, txn_count, fraud_count. Show top 10 customers by total_amount.---
+SELECT
+CUSTOMER_ID,
+SUM(AMOUNT) AS TOTAL_AMOUNT,
+AVG(AMOUNT) AS AVG_AMOUNT,
+COUNT(*) AS TXN_AMOUNT,
+COUNT(*) FILTER(WHERE IS_FRAUD = 1) AS FRAUD_COUNT
+FROM DETECT
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 10
+---Q-10-For each merchant, compute total_txns, fraud_txns, and fraud_rate (fraud_txns/total_txns). Show top 8 merchants by fraud_rate (only include merchants with at least 5 txns).---
+SELECT
+    merchant,
+    COUNT(*) AS total_txns,
+    COUNT(*) FILTER (WHERE is_fraud = 1) AS fraud_txns,
+    ROUND(
+        1.0 * COUNT(*) FILTER (WHERE is_fraud = 1) / COUNT(*),
+        2
+    ) AS fraud_rate
+FROM DETECT
+GROUP BY merchant
+HAVING COUNT(*) >= 5
+ORDER BY fraud_rate DESC
+LIMIT 8;
+
+
+
 
 
 
