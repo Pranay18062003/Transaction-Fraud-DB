@@ -137,6 +137,14 @@ FROM DETECT
 WHERE IS_FRAUD = 1
 GROUP BY 1
 LIMIT 3
+---Q-18-
+SELECT
+    category,
+    COUNT(*) AS fraud_count
+FROM DETECT
+WHERE is_fraud = 1
+GROUP BY category
+ORDER BY fraud_count DESC;
 
 
 
